@@ -1,5 +1,6 @@
 const canvasSketch = require("canvas-sketch");
 const { lerp } = require("canvas-sketch-util/math"); // Linear Interpolation
+const random  = require("canvas-sketch-util/random"); // Linear Interpolation
 
 const settings = {
   dimensions: [2048, 2048]
@@ -18,7 +19,8 @@ const createGrid = count => {
 };
 
 const sketch = () => {
-  const points = createGrid(50).filter(() => Math.random() > 0.5)
+  random.setSeed("12345")
+  const points = createGrid(50).filter(() => random.value() > 0.5)
   const margin = 100;
   return ({ context, width, height }) => {
     // Fill paper colour, otherwise it's a transparent png
