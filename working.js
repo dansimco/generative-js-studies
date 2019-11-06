@@ -7,7 +7,8 @@ const settings = {
   dimensions: [2048, 2048]
 };
 
-random.setSeed("123")
+random.setSeed(random.getRandomSeed())
+console.log(random.getSeed())
 const palette = random.shuffle(random.pick(palettes).slice(0, 5))
 
 const createGrid = count => {
@@ -17,11 +18,14 @@ const createGrid = count => {
       const u = count <= 1 ? 0.5 : x / (count - 1);
       const v = count <= 1 ? 0.5 : y / (count - 1);
       const radius = random.noise2D(u, v);
+      // const emojis = ["🐹", "🐰", "🦊", "🐻", "🐼", "🐤"];
+      const emojis = ["🍇", "🍑", "🍉", "🍋", "🍍", "🥥", "🍐", "🍒"];
       points.push({
-        radius: Math.abs(radius) * 0.1, // Gaussian is more interesting!
+        radius: Math.abs(radius) * 0.2, // Gaussian is more interesting!
         position: [u, v],
         rotation: random.noise2D(u, v),
-        color: random.pick(palette)
+        color: random.pick(palette),
+        emoji: random.pick(emojis)
       });
     }
   }
@@ -30,7 +34,7 @@ const createGrid = count => {
 
 const sketch = () => {
 
-  const points = createGrid(50).filter(() => random.value() > 0.5)
+  const points = createGrid(20).filter(() => random.value() > 0.5)
   const margin = 200;
   return ({ context, width, height }) => {
     // Fill paper colour, otherwise it's a transparent png
@@ -43,7 +47,8 @@ const sketch = () => {
         position,
         radius,
         color,
-        rotation
+        rotation,
+        emoji
       } = data;
       const [u, v] = position;
       // translate UV into pixel space
@@ -63,7 +68,7 @@ const sketch = () => {
       context.font = `${radius * width}px "Helvetica"`
       context.translate(x, y)
       context.rotate(rotation)
-      context.fillText("-", 0, 0)
+      context.fillText(emoji, 0, 0)
       context.restore()
 
     });
