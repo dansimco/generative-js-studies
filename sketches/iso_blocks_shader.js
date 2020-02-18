@@ -61,8 +61,9 @@ const sketch = ({ context }) => {
 
     void main () {
       vUv = uv;
-      vec3 pos = position.xyz * sin(time);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position.xyz, 1.0);
+      vec3 pos = position.xyz;
+      pos += noise(vec4(position.xyz, 1));
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
     }
   `)
 
@@ -140,7 +141,6 @@ const sketch = ({ context }) => {
 
       meshes.forEach(mesh => {
         mesh.material.uniforms.time.value = time;
-      // mesh.rotate.y = time
       });
       renderer.render(scene, camera);
     },
